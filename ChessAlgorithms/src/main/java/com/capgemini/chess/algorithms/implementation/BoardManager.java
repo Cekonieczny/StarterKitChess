@@ -231,11 +231,24 @@ public class BoardManager {
 		this.board.setPieceAt(null, lastMove.getTo());
 	}
 
-	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException {
-
-		// TODO please add implementation here
+	public Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException {
+		
+		if (this.coordinateIsOutOfBounds(from, to)) {
+			throw new InvalidMoveException();
+		}
+		
+		PieceType pieceType = board.getPieceAt(from).getType();
+		PawnMoveValidator pawnMoveValidator = new PawnMoveValidator(from, to, this.board);
+		
+		if(pieceType.equals(PieceType.PAWN)){
+			return pawnMoveValidator.validation();
+		}
 		return null;
+
+		
+		
 	}
+
 
 	private boolean isKingInCheck(Color kingColor) {
 
@@ -250,6 +263,17 @@ public class BoardManager {
 		return false;
 	}
 
+	private boolean coordinateIsOutOfBounds(Coordinate from, Coordinate to) {
+		if (from.getY() >= 8 || to.getY() >= 8|| from.getX() >= 8
+				|| to.getX() >= 8) {
+			return true;
+		} else if (from.getY() < 0 || to.getY() < 0 || from.getX() < 0 || to.getX() < 0) {
+			return true;
+		}
+		return false;
+	}
+
+	// jaki kolor sie teraz moze poruszyc
 	private Color calculateNextMoveColor() {
 		if (this.board.getMoveHistory().size() % 2 == 0) {
 			return Color.WHITE;
