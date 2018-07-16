@@ -488,7 +488,7 @@ public class BoardManagerTest {
 		BoardManager boardManager = new BoardManager(board);
 		boolean exceptionThrown = false;
 		try {
-			boardManager.validateMove(new Coordinate(1, 1), new Coordinate(1, 2));
+			boardManager.performMove(new Coordinate(1, 1), new Coordinate(1, 2));
 		} catch (InvalidMoveException e) {
 			exceptionThrown = true;
 		}

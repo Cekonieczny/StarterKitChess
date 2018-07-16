@@ -11,7 +11,10 @@ import com.capgemini.chess.algorithms.data.enums.MoveType;
 import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.enums.PieceType;
 import com.capgemini.chess.algorithms.data.generated.Board;
+import com.capgemini.chess.algorithms.implementation.exceptions.CoordinateOutOfBoundsException;
+import com.capgemini.chess.algorithms.implementation.exceptions.DestinationFieldIsOccupiedByAlliedPieceException;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
+import com.capgemini.chess.algorithms.implementation.exceptions.InvalidPieceColorChosenException;
 import com.capgemini.chess.algorithms.implementation.exceptions.KingInCheckException;
 
 /**
@@ -231,24 +234,43 @@ public class BoardManager {
 		this.board.setPieceAt(null, lastMove.getTo());
 	}
 
-	public Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException {
-		
+	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException {
+
 		if (this.coordinateIsOutOfBounds(from, to)) {
-			throw new InvalidMoveException();
+			throw new CoordinateOutOfBoundsException();
 		}
-		
+
+		if (this.calculateNextMoveColor() != board.getPieceAt(from).getColor()) {
+			throw new InvalidPieceColorChosenException();
+		}
+
+		if (this.fieldIsOccupiedByAlliedPiece(from, to)) {
+			throw new DestinationFieldIsOccupiedByAlliedPieceException();
+		}
+
 		PieceType pieceType = board.getPieceAt(from).getType();
-		PawnMoveValidator pawnMoveValidator = new PawnMoveValidator(from, to, this.board);
 		
-		if(pieceType.equals(PieceType.PAWN)){
+		
+
+		if (pieceType.equals(PieceType.PAWN)) {
+			PawnMoveValidator pawnMoveValidator = new PawnMoveValidator(from, to, this.board);
 			return pawnMoveValidator.validation();
+		}  else if (pieceType.equals(PieceType.BISHOP)) {
+			BishopMoveValidator bishopMoveValidator = new BishopMoveValidator(from,to, this.board);
+			return bishopMoveValidator.validation();
+		} else if (pieceType.equals(PieceType.KING)) {
+			return null;
+		} else if (pieceType.equals(PieceType.KNIGHT)) {
+			return null;
+		} else if (pieceType.equals(PieceType.QUEEN)) {
+			return null;
+		} else if (pieceType.equals(PieceType.ROOK)) {
+
 		}
+
 		return null;
 
-		
-		
 	}
-
 
 	private boolean isKingInCheck(Color kingColor) {
 
@@ -264,11 +286,18 @@ public class BoardManager {
 	}
 
 	private boolean coordinateIsOutOfBounds(Coordinate from, Coordinate to) {
-		if (from.getY() >= 8 || to.getY() >= 8|| from.getX() >= 8
-				|| to.getX() >= 8) {
+		if (from.getY() >= 8 || to.getY() >= 8 || from.getX() >= 8 || to.getX() >= 8) {
 			return true;
 		} else if (from.getY() < 0 || to.getY() < 0 || from.getX() < 0 || to.getX() < 0) {
 			return true;
+		}
+		return false;
+	}
+
+	private boolean fieldIsOccupiedByAlliedPiece(Coordinate from, Coordinate to) {
+		if (board.getPieceAt(to) != null) {
+			if (board.getPieceAt(from).getColor().equals(board.getPieceAt(from).getColor()))
+				return true;
 		}
 		return false;
 	}

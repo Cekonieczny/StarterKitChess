@@ -2,10 +2,12 @@ package com.capgemini.chess.algorithms.implementation;
 
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.Move;
+import com.capgemini.chess.algorithms.data.enums.Color;
 import com.capgemini.chess.algorithms.data.enums.MoveType;
 import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
+import com.capgemini.chess.algorithms.implementation.exceptions.InvalidPawnMoveException;
 
 public class PawnMoveValidator {
 	private Coordinate from;
@@ -13,19 +15,12 @@ public class PawnMoveValidator {
 	private Board board;
 	private static final int WHITE_PAWN_INITIAL_Y = 1;
 	private static final int BLACK_PAWN_INITIAL_Y = 6;
+	private Move move = new Move();
 
 	public PawnMoveValidator(Coordinate from, Coordinate to, Board board) {
 		this.from = from;
 		this.to = to;
 		this.board = board;
-	}
-
-	public boolean fieldIsOccupiedByAlliedPiece() {
-		if (this.fieldIsOccupied()) {
-			if (board.getPieceAt(from).getColor().equals(board.getPieceAt(from).getColor()))
-				return true;
-		}
-		return false;
 	}
 
 	public Move validation() throws InvalidMoveException {
@@ -39,41 +34,36 @@ public class PawnMoveValidator {
 	}
 
 	private Move moveBlackPawnValidation() {
-		MoveFactory moveFactory = new MoveFactory();
+		MoveCreator moveCreator = new MoveCreator();
 		Piece piece = board.getPieceAt(from);
 
 		if (piece.equals(Piece.BLACK_PAWN)) {
 			if (this.attackBlackPawnValidation()) {
-				moveFactory.setAttack(from, to, board);
-				return moveFactory.getMove();
+				moveCreator.setAttack(from, to, board);
+				return moveCreator.getMove();
 			} else if (this.captureBlackPawnValidation()) {
-				moveFactory.setCapture(from, to, board);
-				return moveFactory.getMove();
+				moveCreator.setCapture(from, to, board);
+				return moveCreator.getMove();
 			}
 		}
 		return null;
 	}
 
 	private Move moveWhitePawnValidation() {
-		MoveFactory moveFactory = new MoveFactory();
+		MoveCreator moveCreator = new MoveCreator();
 		Piece piece = board.getPieceAt(from);
 
 		if (piece.equals(Piece.WHITE_PAWN)) {
 			if (this.attackWhitePawnValidation()) {
-				moveFactory.setAttack(from, to, board);
-				return moveFactory.getMove();
+				moveCreator.setAttack(from, to, board);
+				return moveCreator.getMove();
 			} else if (this.captureWhitePawnValidation()) {
-				moveFactory.setCapture(from, to, board);
-				return moveFactory.getMove();
+				moveCreator.setCapture(from, to, board);
+				return moveCreator.getMove();
 			}
 
 		}
 		return null;
-	}
-
-	private Validator nextValidator(Validator validator) {
-		return validator;
-
 	}
 
 	private boolean attackWhitePawnValidation() {
@@ -95,7 +85,9 @@ public class PawnMoveValidator {
 	}
 
 	private boolean firstAttackWhitePawnValidation() {
-		if ((from.getY() == 1 && (to.getY() == 2 || to.getY() == 3)) && (from.getX() == to.getX())) {
+		if ((from.getY() == WHITE_PAWN_INITIAL_Y
+				&& (to.getY() == WHITE_PAWN_INITIAL_Y + 1 || to.getY() == WHITE_PAWN_INITIAL_Y + 2))
+				&& (from.getX() == to.getX())) {
 			if (this.fieldIsOccupied()) {
 				return false;
 			} else {
@@ -117,7 +109,9 @@ public class PawnMoveValidator {
 	}
 
 	private boolean firstAttackBlackPawnValidation() {
-		if ((from.getY() == 6 && (to.getY() == 5 || to.getY() == 4)) && (from.getX() == to.getX())) {
+		if ((from.getY() == BLACK_PAWN_INITIAL_Y
+				&& (to.getY() == BLACK_PAWN_INITIAL_Y - 1 || to.getY() == BLACK_PAWN_INITIAL_Y - 2))
+				&& (from.getX() == to.getX())) {
 			if (this.fieldIsOccupied()) {
 				return false;
 			} else {
