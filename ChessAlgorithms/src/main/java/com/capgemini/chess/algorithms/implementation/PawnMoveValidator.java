@@ -11,6 +11,8 @@ public class PawnMoveValidator {
 	private Coordinate from;
 	private Coordinate to;
 	private Board board;
+	private static final int WHITE_PAWN_INITIAL_Y = 1;
+	private static final int BLACK_PAWN_INITIAL_Y = 6;
 
 	public PawnMoveValidator(Coordinate from, Coordinate to, Board board) {
 		this.from = from;
