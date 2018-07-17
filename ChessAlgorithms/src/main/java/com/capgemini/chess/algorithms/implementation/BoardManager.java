@@ -237,15 +237,40 @@ public class BoardManager {
 
 	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException {
 
-		this.initialConditionsAreMet(from, to);
+		initialConditionsAreMet(from, to);
 
-		return this.validateMovePattern(from, to);
+		return validateMovePattern(from, to);
 
 	}
 
-	private boolean isKingInCheck(Color kingColor) {
+	public boolean isKingInCheck(Color kingColor) {
+		int i = 0, j = 0;
+		Coordinate piecePosition = new Coordinate(i, j);
 
-		// TODO please add implementation here
+		Coordinate kingPosition = getCurrentKingPosition(kingColor);
+
+		for (i = 0; i < Board.SIZE; i++) {
+			piecePosition = new Coordinate(i, j);
+			if (thisFieldIsEmpty(piecePosition) == false) {
+				if (board.getPieceAt(piecePosition).getColor() != kingColor)
+					try {
+						if (validateMovePattern(piecePosition, kingPosition).getType() == MoveType.CAPTURE) {
+							return true;
+						}
+					} catch (InvalidMoveException e) {}
+			}
+			for (j = 0; j < Board.SIZE - 1; j++) {
+				piecePosition = new Coordinate(i, j);
+				if (thisFieldIsEmpty(piecePosition) == false) {
+					if (board.getPieceAt(piecePosition).getColor() != kingColor)
+						try {
+							if (validateMovePattern(piecePosition, kingPosition).getType() == MoveType.CAPTURE) {
+								return true;
+							}
+						} catch (InvalidMoveException e) {}
+				}
+			}
+		}
 		return false;
 	}
 
@@ -300,22 +325,22 @@ public class BoardManager {
 		PieceType pieceType = board.getPieceAt(from).getType();
 
 		if (pieceType == PieceType.PAWN) {
-			PawnMoveValidator pawnMoveValidator = new PawnMoveValidator(from, to, this.board);
+			PawnMoveValidator pawnMoveValidator = new PawnMoveValidator(from, to, board);
 			return pawnMoveValidator.validate();
 		} else if (pieceType == PieceType.BISHOP) {
-			BishopMoveValidator bishopMoveValidator = new BishopMoveValidator(from, to, this.board);
+			BishopMoveValidator bishopMoveValidator = new BishopMoveValidator(from, to, board);
 			return bishopMoveValidator.validation();
 		} else if (pieceType == PieceType.KNIGHT) {
-			KnightMoveValidator knightMoveValidator = new KnightMoveValidator(from, to, this.board);
+			KnightMoveValidator knightMoveValidator = new KnightMoveValidator(from, to, board);
 			return knightMoveValidator.validation();
 		} else if (pieceType == PieceType.KING) {
-			KingMoveValidator kingMoveValidator = new KingMoveValidator(from, to, this.board);
+			KingMoveValidator kingMoveValidator = new KingMoveValidator(from, to, board);
 			return kingMoveValidator.validation();
 		} else if (pieceType == PieceType.ROOK) {
-			RookMoveValidator rookMoveValidator = new RookMoveValidator(from, to, this.board);
+			RookMoveValidator rookMoveValidator = new RookMoveValidator(from, to, board);
 			return rookMoveValidator.validation();
 		} else if (pieceType == PieceType.QUEEN) {
-			QueenMoveValidator queenMoveValidator = new QueenMoveValidator(from, to, this.board);
+			QueenMoveValidator queenMoveValidator = new QueenMoveValidator(from, to, board);
 			return queenMoveValidator.validate();
 		}
 		return null;
@@ -326,7 +351,7 @@ public class BoardManager {
 			throw new CoordinateOutOfBoundsException();
 		}
 
-		if (board.getPieceAt(from) == null) {
+		if (thisFieldIsEmpty(from)) {
 			throw new EmptyFieldAtStartingPointException();
 		}
 
@@ -340,4 +365,45 @@ public class BoardManager {
 
 	}
 
+	private Coordinate getCurrentKingPosition(Color kingColor) {
+		int i = 0, j = 0;
+		Coordinate kingPosition = new Coordinate(i, j);
+
+		// PieceType pieceType = board.getPieceAt(kingPosition).getType();
+		// Color pieceColor = board.getPieceAt(kingPosition).getColor();
+
+		for (i = 0; i < Board.SIZE; ++i) {
+			kingPosition = new Coordinate(i, j);
+			if (thisFieldIsEmpty(kingPosition) == false) {
+				if (board.getPieceAt(kingPosition).getType() == PieceType.KING
+						&& board.getPieceAt(kingPosition).getColor() == kingColor)
+					return kingPosition;
+			}
+			for (j = 0; j < Board.SIZE - 1; ++j) {
+				kingPosition = new Coordinate(i, j);
+				if (thisFieldIsEmpty(kingPosition) == false) {
+					if (board.getPieceAt(kingPosition).getType() == PieceType.KING
+							&& board.getPieceAt(kingPosition).getColor() == kingColor)
+						return kingPosition;
+				}
+			}
+		}
+		return null;
+	}
+
+	private boolean thisFieldIsEmpty(Coordinate coordinate) {
+		if (getPieceAtWithNoNullException(coordinate) == null) {
+			return true;
+		}
+		return false;
+
+	}
+
+	private Piece getPieceAtWithNoNullException(Coordinate coordinate) {
+		try {
+			return board.getPieceAt(coordinate);
+		} catch (NullPointerException e) {
+			return null;
+		}
+	}
 }

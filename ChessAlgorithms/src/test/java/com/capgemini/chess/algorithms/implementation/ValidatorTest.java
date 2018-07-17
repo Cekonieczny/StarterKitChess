@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.Move;
+import com.capgemini.chess.algorithms.data.enums.Color;
 import com.capgemini.chess.algorithms.data.enums.MoveType;
 import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
@@ -185,4 +186,20 @@ public class ValidatorTest {
 		assertEquals(MoveType.CAPTURE, move.getType());
 		assertEquals(Piece.WHITE_BISHOP, move.getMovedPiece());
 	}
+	
+	@Test
+	public void testKingInCheck(){
+		// given
+		Board board = new Board();
+		board.setPieceAt(Piece.WHITE_BISHOP, new Coordinate(5, 0));
+		board.setPieceAt(Piece.BLACK_KING, new Coordinate(7, 2));
+		
+		// when
+		BoardManager boardManager = new BoardManager(board);
+		boolean kingincheck = boardManager.isKingInCheck(Color.BLACK);
+		
+		// then
+		assertEquals(true, kingincheck);
+	}
+	
 }
