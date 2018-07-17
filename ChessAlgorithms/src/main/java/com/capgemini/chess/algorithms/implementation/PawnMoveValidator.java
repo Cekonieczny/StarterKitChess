@@ -2,12 +2,9 @@ package com.capgemini.chess.algorithms.implementation;
 
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.Move;
-import com.capgemini.chess.algorithms.data.enums.Color;
-import com.capgemini.chess.algorithms.data.enums.MoveType;
 import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
-import com.capgemini.chess.algorithms.implementation.exceptions.InvalidPawnMoveException;
 
 public class PawnMoveValidator {
 	private Coordinate from;
@@ -15,7 +12,6 @@ public class PawnMoveValidator {
 	private Board board;
 	private static final int WHITE_PAWN_INITIAL_Y = 1;
 	private static final int BLACK_PAWN_INITIAL_Y = 6;
-	private Move move = new Move();
 
 	public PawnMoveValidator(Coordinate from, Coordinate to, Board board) {
 		this.from = from;

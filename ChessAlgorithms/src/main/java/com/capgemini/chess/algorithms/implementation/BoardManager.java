@@ -262,7 +262,8 @@ public class BoardManager {
 			KnightMoveValidator knightMoveValidator = new KnightMoveValidator(from,to, this.board);
 			return knightMoveValidator.validation();
 		} else if (pieceType.equals(PieceType.KING)) {
-			return null;
+			KingMoveValidator kingMoveValidator = new KingMoveValidator(from,to, this.board);
+			return kingMoveValidator.validation();
 		} else if (pieceType.equals(PieceType.QUEEN)) {
 			return null;
 		} else if (pieceType.equals(PieceType.ROOK)) {
