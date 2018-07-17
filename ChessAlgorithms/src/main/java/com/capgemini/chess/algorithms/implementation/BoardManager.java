@@ -258,9 +258,10 @@ public class BoardManager {
 		}  else if (pieceType.equals(PieceType.BISHOP)) {
 			BishopMoveValidator bishopMoveValidator = new BishopMoveValidator(from,to, this.board);
 			return bishopMoveValidator.validation();
-		} else if (pieceType.equals(PieceType.KING)) {
-			return null;
 		} else if (pieceType.equals(PieceType.KNIGHT)) {
+			KnightMoveValidator knightMoveValidator = new KnightMoveValidator(from,to, this.board);
+			return knightMoveValidator.validation();
+		} else if (pieceType.equals(PieceType.KING)) {
 			return null;
 		} else if (pieceType.equals(PieceType.QUEEN)) {
 			return null;
@@ -296,7 +297,7 @@ public class BoardManager {
 
 	private boolean fieldIsOccupiedByAlliedPiece(Coordinate from, Coordinate to) {
 		if (board.getPieceAt(to) != null) {
-			if (board.getPieceAt(from).getColor().equals(board.getPieceAt(from).getColor()))
+			if (board.getPieceAt(from).getColor().equals(board.getPieceAt(to).getColor()))
 				return true;
 		}
 		return false;
