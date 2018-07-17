@@ -16,7 +16,7 @@ public class BishopMoveValidator {
 		this.board = board;
 	}
 
-	public Move validation() throws InvalidMoveException {
+	public Move validate() throws InvalidMoveException {
 		MoveCreator moveCreator = new MoveCreator(from, to, board);
 		if (Math.abs(to.getX() - from.getX()) == Math.abs(to.getY() - from.getY())) {
 			if (this.noCollisionOnForwardMove() && this.noCollisionOnBackwardMove()) {

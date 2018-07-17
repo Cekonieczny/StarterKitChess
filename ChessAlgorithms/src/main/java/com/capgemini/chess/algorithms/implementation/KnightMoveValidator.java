@@ -16,7 +16,7 @@ public class KnightMoveValidator {
 		this.board = board;
 	}
 
-	public Move validation() throws InvalidMoveException {
+	public Move validate() throws InvalidMoveException {
 		MoveCreator moveCreator = new MoveCreator(from, to, board);
 		if (Math.abs(to.getX() - from.getX()) == 1 && (Math.abs(to.getY() - from.getY()) == 2)) {
 			if (this.fieldIsOccupiedByEnemyPiece()) {

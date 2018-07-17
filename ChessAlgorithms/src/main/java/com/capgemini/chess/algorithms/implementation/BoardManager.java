@@ -278,7 +278,7 @@ public class BoardManager {
 
 		// TODO please add implementation here
 
-		return false;
+		return true;
 	}
 
 	private boolean coordinateIsOutOfBounds(Coordinate from, Coordinate to) {
@@ -329,16 +329,16 @@ public class BoardManager {
 			return pawnMoveValidator.validate();
 		} else if (pieceType == PieceType.BISHOP) {
 			BishopMoveValidator bishopMoveValidator = new BishopMoveValidator(from, to, board);
-			return bishopMoveValidator.validation();
+			return bishopMoveValidator.validate();
 		} else if (pieceType == PieceType.KNIGHT) {
 			KnightMoveValidator knightMoveValidator = new KnightMoveValidator(from, to, board);
-			return knightMoveValidator.validation();
+			return knightMoveValidator.validate();
 		} else if (pieceType == PieceType.KING) {
 			KingMoveValidator kingMoveValidator = new KingMoveValidator(from, to, board);
-			return kingMoveValidator.validation();
+			return kingMoveValidator.validate();
 		} else if (pieceType == PieceType.ROOK) {
 			RookMoveValidator rookMoveValidator = new RookMoveValidator(from, to, board);
-			return rookMoveValidator.validation();
+			return rookMoveValidator.validate();
 		} else if (pieceType == PieceType.QUEEN) {
 			QueenMoveValidator queenMoveValidator = new QueenMoveValidator(from, to, board);
 			return queenMoveValidator.validate();

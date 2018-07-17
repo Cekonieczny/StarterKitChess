@@ -32,7 +32,7 @@ public class QueenMoveValidator {
 		RookMoveValidator rookMoveValidator = new RookMoveValidator(from, to, board);
 
 		try {
-			return rookMoveValidator.validation();
+			return rookMoveValidator.validate();
 		} catch (InvalidMoveException e) {
 			return null;
 		}
@@ -42,7 +42,7 @@ public class QueenMoveValidator {
 		BishopMoveValidator bishopMoveValidator = new BishopMoveValidator(from, to, board);
 
 		try {
-			return bishopMoveValidator.validation();
+			return bishopMoveValidator.validate();
 		} catch (InvalidMoveException e) {
 			return null;
 		}

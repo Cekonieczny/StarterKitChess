@@ -70,7 +70,7 @@ public class ValidatorTest {
 		BishopMoveValidator bishopMoveValidator = new BishopMoveValidator(from, to, board);
 		boolean exceptionThrown = false;
 		try {
-			bishopMoveValidator.validation();
+			bishopMoveValidator.validate();
 		} catch (InvalidMoveException e) {
 			exceptionThrown = true;
 		}
@@ -92,7 +92,7 @@ public class ValidatorTest {
 		BishopMoveValidator bishopMoveValidator = new BishopMoveValidator(from, to, board);
 		boolean exceptionThrown = false;
 		try {
-			bishopMoveValidator.validation();
+			bishopMoveValidator.validate();
 		} catch (InvalidMoveException e) {
 			exceptionThrown = true;
 		}
@@ -114,7 +114,7 @@ public class ValidatorTest {
 		BishopMoveValidator bishopMoveValidator = new BishopMoveValidator(from, to, board);
 		Move move = null;
 		try {
-			move = bishopMoveValidator.validation();
+			move = bishopMoveValidator.validate();
 		} catch (InvalidMoveException e) {
 			e.printStackTrace();
 		}
@@ -137,7 +137,7 @@ public class ValidatorTest {
 		BishopMoveValidator bishopMoveValidator = new BishopMoveValidator(from, to, board);
 		Move move = null;
 		try {
-			move = bishopMoveValidator.validation();
+			move = bishopMoveValidator.validate();
 		} catch (InvalidMoveException e) {
 			e.printStackTrace();
 		}
@@ -161,7 +161,7 @@ public class ValidatorTest {
 		KnightMoveValidator knightMoveValidator = new KnightMoveValidator(from, to, board);
 		Move move = null;
 		try {
-			move = knightMoveValidator.validation();
+			move = knightMoveValidator.validate();
 		} catch (InvalidMoveException e) {
 			e.printStackTrace();
 		}
