@@ -17,14 +17,14 @@ public class BishopMoveValidator {
 	}
 
 	public Move validation() throws InvalidMoveException {
-		MoveCreator moveCreator = new MoveCreator();
+		MoveCreator moveCreator = new MoveCreator(from, to, board);
 		if (Math.abs(to.getX() - from.getX()) == Math.abs(to.getY() - from.getY())) {
 			if (this.noCollisionOnForwardMove() && this.noCollisionOnBackwardMove()) {
 				if (this.fieldIsOccupiedByEnemyPiece()) {
-					moveCreator.setCapture(from, to, board);
+					moveCreator.setCapture();
 					return moveCreator.getMove();
 				} else {
-					moveCreator.setAttack(from, to, board);
+					moveCreator.setAttack();
 					return moveCreator.getMove();
 				}
 			}
@@ -62,7 +62,7 @@ public class BishopMoveValidator {
 
 	private boolean fieldIsOccupiedByEnemyPiece() {
 		if (this.fieldIsOccupied()) {
-			if (board.getPieceAt(from).getColor().equals(board.getPieceAt(from).getColor()))
+			if (board.getPieceAt(from).getColor()!=(board.getPieceAt(to).getColor()))
 				return true;
 		}
 		return false;

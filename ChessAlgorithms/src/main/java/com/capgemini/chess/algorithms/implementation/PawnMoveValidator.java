@@ -19,7 +19,7 @@ public class PawnMoveValidator {
 		this.board = board;
 	}
 
-	public Move validation() throws InvalidMoveException {
+	public Move validate() throws InvalidMoveException {
 		if (this.moveBlackPawnValidation() != null) {
 			return this.moveBlackPawnValidation();
 		} else if (this.moveWhitePawnValidation() != null) {
@@ -30,15 +30,15 @@ public class PawnMoveValidator {
 	}
 
 	private Move moveBlackPawnValidation() {
-		MoveCreator moveCreator = new MoveCreator();
+		MoveCreator moveCreator = new MoveCreator(from,to,board);
 		Piece piece = board.getPieceAt(from);
 
 		if (piece.equals(Piece.BLACK_PAWN)) {
 			if (this.attackBlackPawnValidation()) {
-				moveCreator.setAttack(from, to, board);
+				moveCreator.setAttack();
 				return moveCreator.getMove();
 			} else if (this.captureBlackPawnValidation()) {
-				moveCreator.setCapture(from, to, board);
+				moveCreator.setCapture();
 				return moveCreator.getMove();
 			}
 		}
@@ -46,15 +46,15 @@ public class PawnMoveValidator {
 	}
 
 	private Move moveWhitePawnValidation() {
-		MoveCreator moveCreator = new MoveCreator();
+		MoveCreator moveCreator = new MoveCreator(from,to,board);
 		Piece piece = board.getPieceAt(from);
 
 		if (piece.equals(Piece.WHITE_PAWN)) {
 			if (this.attackWhitePawnValidation()) {
-				moveCreator.setAttack(from, to, board);
+				moveCreator.setAttack();
 				return moveCreator.getMove();
 			} else if (this.captureWhitePawnValidation()) {
-				moveCreator.setCapture(from, to, board);
+				moveCreator.setCapture();
 				return moveCreator.getMove();
 			}
 
@@ -159,7 +159,7 @@ public class PawnMoveValidator {
 
 	private boolean fieldIsOccupiedByEnemyPiece() {
 		if (this.fieldIsOccupied()) {
-			if (board.getPieceAt(from).getColor().equals(board.getPieceAt(from).getColor()))
+			if (board.getPieceAt(from).getColor()!=(board.getPieceAt(to).getColor()))
 				return true;
 		}
 		return false;

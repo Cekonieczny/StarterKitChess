@@ -237,45 +237,9 @@ public class BoardManager {
 
 	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException {
 
-		if (this.coordinateIsOutOfBounds(from, to)) {
-			throw new CoordinateOutOfBoundsException();
-		}
+		this.initialConditionsAreMet(from, to);
 
-		if (board.getPieceAt(from) == null) {
-			throw new EmptyFieldAtStartingPointException();
-		}
-
-		if (this.calculateNextMoveColor() != board.getPieceAt(from).getColor()) {
-			throw new InvalidPieceColorChosenException();
-		}
-
-		if (this.fieldIsOccupiedByAlliedPiece(from, to)) {
-			throw new DestinationFieldIsOccupiedByAlliedPieceException();
-		}
-
-		PieceType pieceType = board.getPieceAt(from).getType();
-
-		if (pieceType.equals(PieceType.PAWN)) {
-			PawnMoveValidator pawnMoveValidator = new PawnMoveValidator(from, to, this.board);
-			return pawnMoveValidator.validation();
-		} else if (pieceType.equals(PieceType.BISHOP)) {
-			BishopMoveValidator bishopMoveValidator = new BishopMoveValidator(from, to, this.board);
-			return bishopMoveValidator.validation();
-		} else if (pieceType.equals(PieceType.KNIGHT)) {
-			KnightMoveValidator knightMoveValidator = new KnightMoveValidator(from, to, this.board);
-			return knightMoveValidator.validation();
-		} else if (pieceType.equals(PieceType.KING)) {
-			KingMoveValidator kingMoveValidator = new KingMoveValidator(from, to, this.board);
-			return kingMoveValidator.validation();
-		} else if (pieceType.equals(PieceType.ROOK)) {
-			RookMoveValidator rookMoveValidator = new RookMoveValidator(from, to, this.board);
-			return rookMoveValidator.validation();
-		} else if (pieceType.equals(PieceType.QUEEN)) {
-			QueenMoveValidator queenMoveValidator = new QueenMoveValidator(from, to, this.board);
-			return queenMoveValidator.validation();
-		}
-
-		return null;
+		return this.validateMovePattern(from, to);
 
 	}
 
@@ -293,7 +257,8 @@ public class BoardManager {
 	}
 
 	private boolean coordinateIsOutOfBounds(Coordinate from, Coordinate to) {
-		if (from.getY() >= 8 || to.getY() >= 8 || from.getX() >= 8 || to.getX() >= 8) {
+		if (from.getY() >= Board.SIZE || to.getY() >= Board.SIZE || from.getX() >= Board.SIZE
+				|| to.getX() >= Board.SIZE) {
 			return true;
 		} else if (from.getY() < 0 || to.getY() < 0 || from.getX() < 0 || to.getX() < 0) {
 			return true;
@@ -309,7 +274,6 @@ public class BoardManager {
 		return false;
 	}
 
-	// jaki kolor sie teraz moze poruszyc
 	private Color calculateNextMoveColor() {
 		if (this.board.getMoveHistory().size() % 2 == 0) {
 			return Color.WHITE;
@@ -330,6 +294,50 @@ public class BoardManager {
 		}
 
 		return lastNonAttackMoveIndex;
+	}
+
+	private Move validateMovePattern(Coordinate from, Coordinate to) throws InvalidMoveException {
+		PieceType pieceType = board.getPieceAt(from).getType();
+
+		if (pieceType == PieceType.PAWN) {
+			PawnMoveValidator pawnMoveValidator = new PawnMoveValidator(from, to, this.board);
+			return pawnMoveValidator.validate();
+		} else if (pieceType == PieceType.BISHOP) {
+			BishopMoveValidator bishopMoveValidator = new BishopMoveValidator(from, to, this.board);
+			return bishopMoveValidator.validation();
+		} else if (pieceType == PieceType.KNIGHT) {
+			KnightMoveValidator knightMoveValidator = new KnightMoveValidator(from, to, this.board);
+			return knightMoveValidator.validation();
+		} else if (pieceType == PieceType.KING) {
+			KingMoveValidator kingMoveValidator = new KingMoveValidator(from, to, this.board);
+			return kingMoveValidator.validation();
+		} else if (pieceType == PieceType.ROOK) {
+			RookMoveValidator rookMoveValidator = new RookMoveValidator(from, to, this.board);
+			return rookMoveValidator.validation();
+		} else if (pieceType == PieceType.QUEEN) {
+			QueenMoveValidator queenMoveValidator = new QueenMoveValidator(from, to, this.board);
+			return queenMoveValidator.validate();
+		}
+		return null;
+	}
+
+	private void initialConditionsAreMet(Coordinate from, Coordinate to) throws InvalidMoveException {
+		if (coordinateIsOutOfBounds(from, to)) {
+			throw new CoordinateOutOfBoundsException();
+		}
+
+		if (board.getPieceAt(from) == null) {
+			throw new EmptyFieldAtStartingPointException();
+		}
+
+		if (calculateNextMoveColor() != board.getPieceAt(from).getColor()) {
+			throw new InvalidPieceColorChosenException();
+		}
+
+		if (fieldIsOccupiedByAlliedPiece(from, to)) {
+			throw new DestinationFieldIsOccupiedByAlliedPieceException();
+		}
+
 	}
 
 }

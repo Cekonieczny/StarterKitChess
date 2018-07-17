@@ -17,13 +17,13 @@ public class KingMoveValidator {
 	}
 
 	public Move validation() throws InvalidMoveException {
-		MoveCreator moveCreator = new MoveCreator();
+		MoveCreator moveCreator = new MoveCreator(from,to,board);
 		if (Math.abs(to.getX() - from.getX()) == 1 || (Math.abs(to.getY() - from.getY()) == 1)) {
 			if (this.fieldIsOccupiedByEnemyPiece()) {
-				moveCreator.setCapture(from, to, board);
+				moveCreator.setCapture();
 				return moveCreator.getMove();
 			} else {
-				moveCreator.setAttack(from, to, board);
+				moveCreator.setAttack();
 				return moveCreator.getMove();
 			}
 		} 
@@ -39,7 +39,7 @@ public class KingMoveValidator {
 
 	private boolean fieldIsOccupiedByEnemyPiece() {
 		if (this.fieldIsOccupied()) {
-			if (board.getPieceAt(from).getColor().equals(board.getPieceAt(from).getColor()))
+			if (board.getPieceAt(from).getColor()!=(board.getPieceAt(to).getColor()))
 				return true;
 		}
 		return false;

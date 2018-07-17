@@ -24,7 +24,7 @@ public class ValidatorTest {
 		PawnMoveValidator pawnMoveValidator = new PawnMoveValidator(from, to, board);
 		boolean exceptionThrown = false;
 		try {
-			pawnMoveValidator.validation();
+			pawnMoveValidator.validate();
 		} catch (InvalidMoveException e) {
 			exceptionThrown = true;
 		}
@@ -45,7 +45,7 @@ public class ValidatorTest {
 		PawnMoveValidator pawnMoveValidator = new PawnMoveValidator(from, to, board);
 		Move move = null;
 		try {
-			move = pawnMoveValidator.validation();
+			move = pawnMoveValidator.validate();
 		} catch (InvalidMoveException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

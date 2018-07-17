@@ -17,14 +17,14 @@ public class RookMoveValidator {
 	}
 
 	public Move validation() throws InvalidMoveException {
-		MoveCreator moveCreator = new MoveCreator();
-		if (this.verticalMoveValidation() || this.horizontalMoveValidation()) {
+		MoveCreator moveCreator = new MoveCreator(from, to, board);
+		if (verticalMoveValidation() || horizontalMoveValidation()) {
 			{
 				if (this.fieldIsOccupiedByEnemyPiece()) {
-					moveCreator.setCapture(from, to, board);
+					moveCreator.setCapture();
 					return moveCreator.getMove();
 				} else {
-					moveCreator.setAttack(from, to, board);
+					moveCreator.setAttack();
 					return moveCreator.getMove();
 				}
 			}
@@ -35,7 +35,7 @@ public class RookMoveValidator {
 	private boolean verticalMoveValidation() {
 		boolean movesVerticalForwards = to.getY() > from.getY();
 		boolean movesVerticalBackwards = to.getY() < from.getY();
-		
+
 		if (Math.abs(to.getX() - from.getX()) == 0 && Math.abs(to.getY() - from.getY()) != 0) {
 			if (movesVerticalForwards && this.noCollisionOnVerticalMoveForward()) {
 				return true;
@@ -49,7 +49,7 @@ public class RookMoveValidator {
 	private boolean horizontalMoveValidation() {
 		boolean movesHorizontalForwards = to.getX() > from.getX();
 		boolean movesHorizontalBackwards = to.getX() < from.getX();
-		
+
 		if (Math.abs(to.getY() - from.getY()) == 0 && Math.abs(to.getX() - from.getX()) != 0) {
 			if (movesHorizontalForwards && this.noCollisionOnHorizontalMoveForward()) {
 				return true;
@@ -109,10 +109,10 @@ public class RookMoveValidator {
 
 	private boolean fieldIsOccupiedByEnemyPiece() {
 		if (this.fieldIsOccupied()) {
-			if (board.getPieceAt(from).getColor().equals(board.getPieceAt(from).getColor()))
+			if (board.getPieceAt(from).getColor()!=(board.getPieceAt(to).getColor()))
 				return true;
 		}
 		return false;
 	}
-	
+
 }

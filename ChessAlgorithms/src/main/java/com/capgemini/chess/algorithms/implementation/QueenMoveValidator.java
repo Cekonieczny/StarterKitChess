@@ -9,8 +9,6 @@ public class QueenMoveValidator {
 	private Coordinate from;
 	private Coordinate to;
 	private Board board;
-	private Move move;
-	
 
 	public QueenMoveValidator(Coordinate from, Coordinate to, Board board) {
 		this.from = from;
@@ -18,36 +16,35 @@ public class QueenMoveValidator {
 		this.board = board;
 	}
 
-	public Move validation() throws InvalidMoveException {
-		
-		if (this.rookValidation()!=null){
+	public Move validate() throws InvalidMoveException {
+		Move move = rookValidate();
+		if (move != null) {
 			return move;
-		}else if(this.bishopValidation()!=null) {
+		}
+		move = bishopValidate();
+		if (move != null) {
 			return move;
 		}
 		throw new InvalidMoveException();
 	}
-	
-	private Move rookValidation(){
+
+	private Move rookValidate() {
 		RookMoveValidator rookMoveValidator = new RookMoveValidator(from, to, board);
-	
+
 		try {
-			return move = rookMoveValidator.validation();
+			return rookMoveValidator.validation();
 		} catch (InvalidMoveException e) {
-		    return  null;
-		}	
+			return null;
+		}
 	}
-	
-	private Move bishopValidation(){
+
+	private Move bishopValidate() {
 		BishopMoveValidator bishopMoveValidator = new BishopMoveValidator(from, to, board);
-	
+
 		try {
-			return move = bishopMoveValidator.validation();
+			return bishopMoveValidator.validation();
 		} catch (InvalidMoveException e) {
-		    return  null;
-		}	
+			return null;
+		}
 	}
 }
-		
-	
-	
