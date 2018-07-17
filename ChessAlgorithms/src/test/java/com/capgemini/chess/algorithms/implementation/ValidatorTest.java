@@ -169,4 +169,20 @@ public class ValidatorTest {
 		assertEquals(MoveType.ATTACK, move.getType());
 		assertEquals(Piece.WHITE_KNIGHT, move.getMovedPiece());
 	}
+	
+	@Test
+	public void testPerformMoveBishopCapture() throws InvalidMoveException {
+		// given
+		Board board = new Board();
+		board.setPieceAt(Piece.WHITE_BISHOP, new Coordinate(5, 0));
+		board.setPieceAt(Piece.BLACK_PAWN, new Coordinate(7, 2));
+		
+		// when
+		BoardManager boardManager = new BoardManager(board);
+		Move move = boardManager.performMove(new Coordinate(5, 0), new Coordinate(7, 2));
+		
+		// then
+		assertEquals(MoveType.CAPTURE, move.getType());
+		assertEquals(Piece.WHITE_BISHOP, move.getMovedPiece());
+	}
 }

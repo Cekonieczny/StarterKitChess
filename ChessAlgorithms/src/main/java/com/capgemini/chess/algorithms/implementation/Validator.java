@@ -7,15 +7,6 @@ import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveExcep
 
 public interface Validator {
 
-
-	default boolean fieldIsOccupiedByAlliedPiece(Coordinate from, Board board) {
-		if (Validator.fieldIsOccupied(from, board)) {
-			if (board.getPieceAt(from).getColor().equals(board.getPieceAt(from).getColor()))
-				return true;
-		}
-		return false;
-	}
-	
 	default boolean fieldIsOccupiedByEnemyPiece(Coordinate from, Board board) {
 		if (Validator.fieldIsOccupied(from, board)) {
 			if (board.getPieceAt(from).getColor().equals(board.getPieceAt(from).getColor()))

@@ -13,6 +13,7 @@ import com.capgemini.chess.algorithms.data.enums.PieceType;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.CoordinateOutOfBoundsException;
 import com.capgemini.chess.algorithms.implementation.exceptions.DestinationFieldIsOccupiedByAlliedPieceException;
+import com.capgemini.chess.algorithms.implementation.exceptions.EmptyFieldAtStartingPointException;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidPieceColorChosenException;
 import com.capgemini.chess.algorithms.implementation.exceptions.KingInCheckException;
@@ -240,6 +241,10 @@ public class BoardManager {
 			throw new CoordinateOutOfBoundsException();
 		}
 
+		if (board.getPieceAt(from) == null) {
+			throw new EmptyFieldAtStartingPointException();
+		}
+
 		if (this.calculateNextMoveColor() != board.getPieceAt(from).getColor()) {
 			throw new InvalidPieceColorChosenException();
 		}
@@ -249,25 +254,25 @@ public class BoardManager {
 		}
 
 		PieceType pieceType = board.getPieceAt(from).getType();
-		
-		
 
 		if (pieceType.equals(PieceType.PAWN)) {
 			PawnMoveValidator pawnMoveValidator = new PawnMoveValidator(from, to, this.board);
 			return pawnMoveValidator.validation();
-		}  else if (pieceType.equals(PieceType.BISHOP)) {
-			BishopMoveValidator bishopMoveValidator = new BishopMoveValidator(from,to, this.board);
+		} else if (pieceType.equals(PieceType.BISHOP)) {
+			BishopMoveValidator bishopMoveValidator = new BishopMoveValidator(from, to, this.board);
 			return bishopMoveValidator.validation();
 		} else if (pieceType.equals(PieceType.KNIGHT)) {
-			KnightMoveValidator knightMoveValidator = new KnightMoveValidator(from,to, this.board);
+			KnightMoveValidator knightMoveValidator = new KnightMoveValidator(from, to, this.board);
 			return knightMoveValidator.validation();
 		} else if (pieceType.equals(PieceType.KING)) {
-			KingMoveValidator kingMoveValidator = new KingMoveValidator(from,to, this.board);
+			KingMoveValidator kingMoveValidator = new KingMoveValidator(from, to, this.board);
 			return kingMoveValidator.validation();
-		} else if (pieceType.equals(PieceType.QUEEN)) {
-			return null;
 		} else if (pieceType.equals(PieceType.ROOK)) {
-
+			RookMoveValidator rookMoveValidator = new RookMoveValidator(from, to, this.board);
+			return rookMoveValidator.validation();
+		} else if (pieceType.equals(PieceType.QUEEN)) {
+			QueenMoveValidator queenMoveValidator = new QueenMoveValidator(from, to, this.board);
+			return queenMoveValidator.validation();
 		}
 
 		return null;

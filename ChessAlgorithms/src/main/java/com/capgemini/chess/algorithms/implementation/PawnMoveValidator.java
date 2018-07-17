@@ -129,7 +129,7 @@ public class PawnMoveValidator {
 	}
 
 	private boolean captureBlackPawnValidation() {
-		if (from.getY() == to.getY() + 1 && (from.getX() == to.getX() + 1 || from.getX() == to.getX() - 1)) {
+		if (from.getY() == to.getY() + 1 && (Math.abs(from.getX() - to.getX()) == 1)) {
 			if (this.fieldIsOccupiedByEnemyPiece()) {
 				return true;
 			} else {
@@ -140,7 +140,7 @@ public class PawnMoveValidator {
 	}
 
 	private boolean captureWhitePawnValidation() {
-		if (from.getY() == to.getY() - 1 && (from.getX() == to.getX() + 1 || from.getX() == to.getX() - 1)) {
+		if (from.getY() == to.getY() - 1 && (Math.abs(from.getX() - to.getX()) == 1)) {
 			if (this.fieldIsOccupiedByEnemyPiece()) {
 				return true;
 			} else {
