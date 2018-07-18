@@ -6,7 +6,7 @@ import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 
-public class PawnMoveValidator {
+public class PawnMoveValidator extends MoveValidator {
 	private Coordinate from;
 	private Coordinate to;
 	private Board board;
@@ -19,6 +19,7 @@ public class PawnMoveValidator {
 		this.board = board;
 	}
 
+	@Override
 	public Move validate() throws InvalidMoveException {
 		if (this.moveBlackPawnValidation() != null) {
 			return this.moveBlackPawnValidation();
@@ -30,7 +31,7 @@ public class PawnMoveValidator {
 	}
 
 	private Move moveBlackPawnValidation() {
-		MoveCreator moveCreator = new MoveCreator(from,to,board);
+		MoveCreator moveCreator = new MoveCreator(from, to, board);
 		Piece piece = board.getPieceAt(from);
 
 		if (piece.equals(Piece.BLACK_PAWN)) {
@@ -46,7 +47,7 @@ public class PawnMoveValidator {
 	}
 
 	private Move moveWhitePawnValidation() {
-		MoveCreator moveCreator = new MoveCreator(from,to,board);
+		MoveCreator moveCreator = new MoveCreator(from, to, board);
 		Piece piece = board.getPieceAt(from);
 
 		if (piece.equals(Piece.WHITE_PAWN)) {
@@ -84,7 +85,7 @@ public class PawnMoveValidator {
 		if ((from.getY() == WHITE_PAWN_INITIAL_Y
 				&& (to.getY() == WHITE_PAWN_INITIAL_Y + 1 || to.getY() == WHITE_PAWN_INITIAL_Y + 2))
 				&& (from.getX() == to.getX())) {
-			if (destinationFieldIsOccupied()) {
+			if (destinationFieldIsOccupied(to, board)) {
 				return false;
 			} else {
 				return true;
@@ -95,7 +96,7 @@ public class PawnMoveValidator {
 
 	private boolean normalAttackWhitePawnValidation() {
 		if (from.getY() == to.getY() - 1 && from.getX() == to.getX()) {
-			if (destinationFieldIsOccupied()) {
+			if (destinationFieldIsOccupied(to, board)) {
 				return false;
 			} else {
 				return true;
@@ -108,7 +109,7 @@ public class PawnMoveValidator {
 		if ((from.getY() == BLACK_PAWN_INITIAL_Y
 				&& (to.getY() == BLACK_PAWN_INITIAL_Y - 1 || to.getY() == BLACK_PAWN_INITIAL_Y - 2))
 				&& (from.getX() == to.getX())) {
-			if (destinationFieldIsOccupied()) {
+			if (destinationFieldIsOccupied(to, board)) {
 				return false;
 			} else {
 				return true;
@@ -119,7 +120,7 @@ public class PawnMoveValidator {
 
 	private boolean normalAttackBlackPawnValidation() {
 		if (from.getY() == to.getY() + 1 && from.getX() == to.getX()) {
-			if (destinationFieldIsOccupied()) {
+			if (destinationFieldIsOccupied(to, board)) {
 				return false;
 			} else {
 				return true;
@@ -130,7 +131,7 @@ public class PawnMoveValidator {
 
 	private boolean captureBlackPawnValidation() {
 		if (from.getY() == to.getY() + 1 && (Math.abs(from.getX() - to.getX()) == 1)) {
-			if (destinationFieldIsOccupied()) {
+			if (destinationFieldIsOccupied(to, board)) {
 				return true;
 			} else {
 				return false;
@@ -141,7 +142,7 @@ public class PawnMoveValidator {
 
 	private boolean captureWhitePawnValidation() {
 		if (from.getY() == to.getY() - 1 && (Math.abs(from.getX() - to.getX()) == 1)) {
-			if (destinationFieldIsOccupied()) {
+			if (destinationFieldIsOccupied(to, board)) {
 				return true;
 			} else {
 				return false;
@@ -149,21 +150,4 @@ public class PawnMoveValidator {
 		}
 		return false;
 	}
-
-	private boolean destinationFieldIsOccupied() {
-		if (this.getPieceAtToWithNoNullException() != null) {
-			return true;
-		}
-		return false;
-
-	}
-
-	private Piece getPieceAtToWithNoNullException() {
-		try {
-			return board.getPieceAt(to);
-		} catch (NullPointerException e) {
-			return null;
-		}
-	}
-
 }

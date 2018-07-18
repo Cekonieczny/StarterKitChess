@@ -5,7 +5,7 @@ import com.capgemini.chess.algorithms.data.Move;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 
-public class QueenMoveValidator {
+public class QueenMoveValidator extends MoveValidator {
 	private Coordinate from;
 	private Coordinate to;
 	private Board board;
@@ -16,6 +16,7 @@ public class QueenMoveValidator {
 		this.board = board;
 	}
 
+	@Override
 	public Move validate() throws InvalidMoveException {
 		Move move = rookValidate();
 		if (move != null) {

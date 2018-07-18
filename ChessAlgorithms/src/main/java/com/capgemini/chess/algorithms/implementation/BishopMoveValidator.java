@@ -2,11 +2,10 @@ package com.capgemini.chess.algorithms.implementation;
 
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.Move;
-import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 
-public class BishopMoveValidator {
+public class BishopMoveValidator extends MoveValidator {
 	private Coordinate from;
 	private Coordinate to;
 	private Board board;
@@ -17,11 +16,12 @@ public class BishopMoveValidator {
 		this.board = board;
 	}
 
+	@Override
 	public Move validate() throws InvalidMoveException {
 		MoveCreator moveCreator = new MoveCreator(from, to, board);
 		if (Math.abs(to.getX() - from.getX()) == Math.abs(to.getY() - from.getY())) {
 			if (noCollisionOnForwardMove() && noCollisionOnBackwardMove()) {
-				if (destinationFieldIsOccupied()) {
+				if (destinationFieldIsOccupied(to, board)) {
 					moveCreator.setCapture();
 					return moveCreator.getMove();
 				} else {
@@ -52,21 +52,5 @@ public class BishopMoveValidator {
 			}
 		}
 		return true;
-	}
-
-	private boolean destinationFieldIsOccupied() {
-		if (this.getPieceAtToWithNoNullException() != null) {
-			return true;
-		}
-		return false;
-
-	}
-
-	private Piece getPieceAtToWithNoNullException() {
-		try {
-			return board.getPieceAt(to);
-		} catch (NullPointerException e) {
-			return null;
-		}
 	}
 }

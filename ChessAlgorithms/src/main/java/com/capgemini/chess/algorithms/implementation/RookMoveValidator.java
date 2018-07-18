@@ -2,11 +2,10 @@ package com.capgemini.chess.algorithms.implementation;
 
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.Move;
-import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 
-public class RookMoveValidator {
+public class RookMoveValidator extends MoveValidator {
 	private Coordinate from;
 	private Coordinate to;
 	private Board board;
@@ -17,11 +16,12 @@ public class RookMoveValidator {
 		this.board = board;
 	}
 
+	@Override
 	public Move validate() throws InvalidMoveException {
 		MoveCreator moveCreator = new MoveCreator(from, to, board);
 		if (verticalMoveValidation() || horizontalMoveValidation()) {
 			{
-				if (destinationFieldIsOccupied()) {
+				if (destinationFieldIsOccupied(to, board)) {
 					moveCreator.setCapture();
 					return moveCreator.getMove();
 				} else {
@@ -38,9 +38,9 @@ public class RookMoveValidator {
 		boolean movesVerticalBackwards = to.getY() < from.getY();
 
 		if (Math.abs(to.getX() - from.getX()) == 0 && Math.abs(to.getY() - from.getY()) != 0) {
-			if (movesVerticalForwards && this.noCollisionOnVerticalMoveForward()) {
+			if (movesVerticalForwards && noCollisionOnVerticalMoveForward()) {
 				return true;
-			} else if (movesVerticalBackwards && this.noCollisionOnVerticalMoveBackward()) {
+			} else if (movesVerticalBackwards && noCollisionOnVerticalMoveBackward()) {
 				return true;
 			}
 		}
@@ -52,9 +52,9 @@ public class RookMoveValidator {
 		boolean movesHorizontalBackwards = to.getX() < from.getX();
 
 		if (Math.abs(to.getY() - from.getY()) == 0 && Math.abs(to.getX() - from.getX()) != 0) {
-			if (movesHorizontalForwards && this.noCollisionOnHorizontalMoveForward()) {
+			if (movesHorizontalForwards && noCollisionOnHorizontalMoveForward()) {
 				return true;
-			} else if (movesHorizontalBackwards && this.noCollisionOnHorizontalMoveBackward()) {
+			} else if (movesHorizontalBackwards && noCollisionOnHorizontalMoveBackward()) {
 				return true;
 			}
 		}
@@ -64,7 +64,7 @@ public class RookMoveValidator {
 	private boolean noCollisionOnVerticalMoveForward() {
 		for (int j = from.getY() + 1; j < to.getY(); j++) {
 			Coordinate coordinate = new Coordinate(from.getX(), j);
-			if (thisFieldIsOccupied(coordinate)) {
+			if (destinationFieldIsOccupied(coordinate, board)) {
 				return false;
 			}
 		}
@@ -74,7 +74,7 @@ public class RookMoveValidator {
 	private boolean noCollisionOnVerticalMoveBackward() {
 		for (int j = from.getY() - 1; j > to.getY(); j--) {
 			Coordinate coordinate = new Coordinate(from.getX(), j);
-			if (thisFieldIsOccupied(coordinate)) {
+			if (destinationFieldIsOccupied(coordinate, board)) {
 				return false;
 			}
 		}
@@ -84,7 +84,7 @@ public class RookMoveValidator {
 	private boolean noCollisionOnHorizontalMoveForward() {
 		for (int i = from.getX() + 1; i < to.getX(); i++) {
 			Coordinate coordinate = new Coordinate(i, from.getY());
-			if (thisFieldIsOccupied(coordinate)) {
+			if (destinationFieldIsOccupied(coordinate, board)) {
 				return false;
 			}
 		}
@@ -94,42 +94,11 @@ public class RookMoveValidator {
 	private boolean noCollisionOnHorizontalMoveBackward() {
 		for (int i = from.getX() - 1; i > to.getX(); i--) {
 			Coordinate coordinate = new Coordinate(i, from.getY());
-			if (thisFieldIsOccupied(coordinate)) {
+			if (destinationFieldIsOccupied(coordinate, board)) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	private boolean destinationFieldIsOccupied() {
-		if (this.getPieceAtToWithNoNullException() != null) {
-			return true;
-		}
-		return false;
-
-	}
-
-	private Piece getPieceAtToWithNoNullException() {
-		try {
-			return board.getPieceAt(to);
-		} catch (NullPointerException e) {
-			return null;
-		}
-	}
-	
-	private Piece getPieceAtWithNoNullException(Coordinate coordinate) {
-		try {
-			return board.getPieceAt(coordinate);
-		} catch (NullPointerException e) {
-			return null;
-		}
-	}
-	
-	private boolean thisFieldIsOccupied(Coordinate coordinate) {
-		if (this.getPieceAtWithNoNullException(coordinate) != null) {
-			return true;
-		}
-		return false;
-
-	}
 }

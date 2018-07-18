@@ -340,27 +340,22 @@ public class BoardManager {
 
 	private Move validateMovePattern(Coordinate from, Coordinate to) throws InvalidMoveException {
 		PieceType pieceType = board.getPieceAt(from).getType();
+		MoveValidator moveValidator = null;
 
 		if (pieceType == PieceType.PAWN) {
-			PawnMoveValidator pawnMoveValidator = new PawnMoveValidator(from, to, board);
-			return pawnMoveValidator.validate();
+			moveValidator = new PawnMoveValidator(from, to, board);
 		} else if (pieceType == PieceType.BISHOP) {
-			BishopMoveValidator bishopMoveValidator = new BishopMoveValidator(from, to, board);
-			return bishopMoveValidator.validate();
+			moveValidator = new BishopMoveValidator(from, to, board);
 		} else if (pieceType == PieceType.KNIGHT) {
-			KnightMoveValidator knightMoveValidator = new KnightMoveValidator(from, to, board);
-			return knightMoveValidator.validate();
+			moveValidator = new KnightMoveValidator(from, to, board);
 		} else if (pieceType == PieceType.KING) {
-			KingMoveValidator kingMoveValidator = new KingMoveValidator(from, to, board);
-			return kingMoveValidator.validate();
+			moveValidator = new KingMoveValidator(from, to, board);
 		} else if (pieceType == PieceType.ROOK) {
-			RookMoveValidator rookMoveValidator = new RookMoveValidator(from, to, board);
-			return rookMoveValidator.validate();
+			moveValidator = new RookMoveValidator(from, to, board);
 		} else if (pieceType == PieceType.QUEEN) {
-			QueenMoveValidator queenMoveValidator = new QueenMoveValidator(from, to, board);
-			return queenMoveValidator.validate();
+			moveValidator = new QueenMoveValidator(from, to, board);
 		}
-		return null;
+		return moveValidator.validate();
 	}
 
 	private void initialConditionsAreMet(Coordinate from, Coordinate to) throws InvalidMoveException {

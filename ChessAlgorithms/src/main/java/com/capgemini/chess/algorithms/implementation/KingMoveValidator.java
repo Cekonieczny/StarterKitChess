@@ -6,7 +6,7 @@ import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 
-public class KingMoveValidator {
+public class KingMoveValidator extends MoveValidator {
 	private Coordinate from;
 	private Coordinate to;
 	private Board board;
@@ -17,10 +17,11 @@ public class KingMoveValidator {
 		this.board = board;
 	}
 
+	@Override
 	public Move validate() throws InvalidMoveException {
 		MoveCreator moveCreator = new MoveCreator(from,to,board);
 		if (!(Math.abs(to.getX() - from.getX()) >1 || (Math.abs(to.getY() - from.getY()) >1))) {
-			if (destinationFieldIsOccupied()) {
+			if (destinationFieldIsOccupied(to, board)) {
 				moveCreator.setCapture();
 				return moveCreator.getMove();
 			} else {
@@ -30,22 +31,4 @@ public class KingMoveValidator {
 		} 
 		throw new InvalidMoveException();
 	}
-
-	private boolean destinationFieldIsOccupied() {
-		if (this.getPieceAtToWithNoNullException() != null) {
-			return true;
-		}
-		return false;
-
-	}
-
-	private Piece getPieceAtToWithNoNullException() {
-		try {
-			return board.getPieceAt(to);
-		} catch (NullPointerException e) {
-			return null;
-		}
-	}
-
-
 }
