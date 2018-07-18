@@ -2,6 +2,7 @@ package com.capgemini.chess.algorithms.implementation;
 
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.Move;
+import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 
@@ -20,7 +21,7 @@ public class RookMoveValidator {
 		MoveCreator moveCreator = new MoveCreator(from, to, board);
 		if (verticalMoveValidation() || horizontalMoveValidation()) {
 			{
-				if (this.fieldIsOccupiedByEnemyPiece()) {
+				if (destinationFieldIsOccupied()) {
 					moveCreator.setCapture();
 					return moveCreator.getMove();
 				} else {
@@ -63,7 +64,7 @@ public class RookMoveValidator {
 	private boolean noCollisionOnVerticalMoveForward() {
 		for (int j = from.getY() + 1; j < to.getY(); j++) {
 			Coordinate coordinate = new Coordinate(from.getX(), j);
-			if (board.getPieceAt(coordinate) != null) {
+			if (thisFieldIsOccupied(coordinate)) {
 				return false;
 			}
 		}
@@ -73,7 +74,7 @@ public class RookMoveValidator {
 	private boolean noCollisionOnVerticalMoveBackward() {
 		for (int j = from.getY() - 1; j > to.getY(); j--) {
 			Coordinate coordinate = new Coordinate(from.getX(), j);
-			if (board.getPieceAt(coordinate) != null) {
+			if (thisFieldIsOccupied(coordinate)) {
 				return false;
 			}
 		}
@@ -83,7 +84,7 @@ public class RookMoveValidator {
 	private boolean noCollisionOnHorizontalMoveForward() {
 		for (int i = from.getX() + 1; i < to.getX(); i++) {
 			Coordinate coordinate = new Coordinate(i, from.getY());
-			if (board.getPieceAt(coordinate) != null) {
+			if (thisFieldIsOccupied(coordinate)) {
 				return false;
 			}
 		}
@@ -93,26 +94,42 @@ public class RookMoveValidator {
 	private boolean noCollisionOnHorizontalMoveBackward() {
 		for (int i = from.getX() - 1; i > to.getX(); i--) {
 			Coordinate coordinate = new Coordinate(i, from.getY());
-			if (board.getPieceAt(coordinate) != null) {
+			if (thisFieldIsOccupied(coordinate)) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	private boolean fieldIsOccupied() {
-		if (board.getPieceAt(to) != null) {
+	private boolean destinationFieldIsOccupied() {
+		if (this.getPieceAtToWithNoNullException() != null) {
 			return true;
 		}
 		return false;
+
 	}
 
-	private boolean fieldIsOccupiedByEnemyPiece() {
-		if (this.fieldIsOccupied()) {
-			if (board.getPieceAt(from).getColor()!=(board.getPieceAt(to).getColor()))
-				return true;
+	private Piece getPieceAtToWithNoNullException() {
+		try {
+			return board.getPieceAt(to);
+		} catch (NullPointerException e) {
+			return null;
+		}
+	}
+	
+	private Piece getPieceAtWithNoNullException(Coordinate coordinate) {
+		try {
+			return board.getPieceAt(coordinate);
+		} catch (NullPointerException e) {
+			return null;
+		}
+	}
+	
+	private boolean thisFieldIsOccupied(Coordinate coordinate) {
+		if (this.getPieceAtWithNoNullException(coordinate) != null) {
+			return true;
 		}
 		return false;
-	}
 
+	}
 }

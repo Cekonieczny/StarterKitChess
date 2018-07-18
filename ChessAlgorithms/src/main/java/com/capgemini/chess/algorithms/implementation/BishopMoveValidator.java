@@ -2,6 +2,7 @@ package com.capgemini.chess.algorithms.implementation;
 
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.Move;
+import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 
@@ -19,8 +20,8 @@ public class BishopMoveValidator {
 	public Move validate() throws InvalidMoveException {
 		MoveCreator moveCreator = new MoveCreator(from, to, board);
 		if (Math.abs(to.getX() - from.getX()) == Math.abs(to.getY() - from.getY())) {
-			if (this.noCollisionOnForwardMove() && this.noCollisionOnBackwardMove()) {
-				if (this.fieldIsOccupiedByEnemyPiece()) {
+			if (noCollisionOnForwardMove() && noCollisionOnBackwardMove()) {
+				if (destinationFieldIsOccupied()) {
 					moveCreator.setCapture();
 					return moveCreator.getMove();
 				} else {
@@ -53,18 +54,19 @@ public class BishopMoveValidator {
 		return true;
 	}
 
-	private boolean fieldIsOccupied() {
-		if (board.getPieceAt(to) != null) {
+	private boolean destinationFieldIsOccupied() {
+		if (this.getPieceAtToWithNoNullException() != null) {
 			return true;
 		}
 		return false;
+
 	}
 
-	private boolean fieldIsOccupiedByEnemyPiece() {
-		if (this.fieldIsOccupied()) {
-			if (board.getPieceAt(from).getColor()!=(board.getPieceAt(to).getColor()))
-				return true;
+	private Piece getPieceAtToWithNoNullException() {
+		try {
+			return board.getPieceAt(to);
+		} catch (NullPointerException e) {
+			return null;
 		}
-		return false;
 	}
 }

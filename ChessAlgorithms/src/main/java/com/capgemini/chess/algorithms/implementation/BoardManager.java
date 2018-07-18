@@ -239,11 +239,23 @@ public class BoardManager {
 
 		initialConditionsAreMet(from, to);
 
-		return validateMovePattern(from, to);
+		Move move = validateMovePattern(from, to);
+
+		Piece movedPiece = move.getMovedPiece();
+		board.setPieceAt(movedPiece, to);
+		board.setPieceAt(null, from);
+
+		if (isKingInCheck(calculateNextMoveColor()) == false) {
+			board.setPieceAt(movedPiece, from);
+			board.setPieceAt(null, to);
+			return move;
+		} else {
+			throw new KingInCheckException();
+		}
 
 	}
 
-	public boolean isKingInCheck(Color kingColor) {
+	private boolean isKingInCheck(Color kingColor) {
 		int i = 0, j = 0;
 		Coordinate piecePosition = new Coordinate(i, j);
 
@@ -257,7 +269,8 @@ public class BoardManager {
 						if (validateMovePattern(piecePosition, kingPosition).getType() == MoveType.CAPTURE) {
 							return true;
 						}
-					} catch (InvalidMoveException e) {}
+					} catch (InvalidMoveException e) {
+					}
 			}
 			for (j = 0; j < Board.SIZE - 1; j++) {
 				piecePosition = new Coordinate(i, j);
@@ -267,7 +280,8 @@ public class BoardManager {
 							if (validateMovePattern(piecePosition, kingPosition).getType() == MoveType.CAPTURE) {
 								return true;
 							}
-						} catch (InvalidMoveException e) {}
+						} catch (InvalidMoveException e) {
+						}
 				}
 			}
 		}
@@ -275,10 +289,23 @@ public class BoardManager {
 	}
 
 	private boolean isAnyMoveValid(Color nextMoveColor) {
+		int i = 0, j = 0;
+		Coordinate to = new Coordinate(i, j);
+		Coordinate from =  new Coordinate(0, 0);
 
-		// TODO please add implementation here
-
-		return true;
+		while (from != null) {
+			for (i = 0; i < Board.SIZE; i++) {
+				for (j = 0; j < Board.SIZE; j++) {
+					to = new Coordinate(i, j);
+					try {
+						validateMove(from, to);
+						return true;
+					} catch (InvalidMoveException e) {}
+				}
+			}
+			from = getGivenColorPiecePosition(nextMoveColor, from);
+		}
+		return false;
 	}
 
 	private boolean coordinateIsOutOfBounds(Coordinate from, Coordinate to) {
@@ -292,7 +319,7 @@ public class BoardManager {
 	}
 
 	private boolean fieldIsOccupiedByAlliedPiece(Coordinate from, Coordinate to) {
-		if (board.getPieceAt(to) != null) {
+		if (this.thisFieldIsEmpty(to) == false) {
 			if (board.getPieceAt(from).getColor().equals(board.getPieceAt(to).getColor()))
 				return true;
 		}
@@ -365,12 +392,28 @@ public class BoardManager {
 
 	}
 
+	private Coordinate getGivenColorPiecePosition(Color givenColor, Coordinate startingPiecePosition) {
+		int i = startingPiecePosition.getX();
+		int j = startingPiecePosition.getY();
+
+		Coordinate piecePosition = startingPiecePosition;
+
+		for (i = startingPiecePosition.getX(); i < Board.SIZE; i++) {
+			for (j = startingPiecePosition.getY(); j < Board.SIZE; j++) {
+				piecePosition = new Coordinate(i, j);
+				if (thisFieldIsEmpty(piecePosition) == false) {
+					if (!piecePosition.equals(startingPiecePosition)
+							&& board.getPieceAt(piecePosition).getColor() == givenColor)
+						return piecePosition;
+				}
+			}
+		}
+		return null;
+	}
+
 	private Coordinate getCurrentKingPosition(Color kingColor) {
 		int i = 0, j = 0;
 		Coordinate kingPosition = new Coordinate(i, j);
-
-		// PieceType pieceType = board.getPieceAt(kingPosition).getType();
-		// Color pieceColor = board.getPieceAt(kingPosition).getColor();
 
 		for (i = 0; i < Board.SIZE; ++i) {
 			kingPosition = new Coordinate(i, j);
@@ -388,7 +431,7 @@ public class BoardManager {
 				}
 			}
 		}
-		return null;
+		return kingPosition;
 	}
 
 	private boolean thisFieldIsEmpty(Coordinate coordinate) {

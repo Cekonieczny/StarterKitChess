@@ -84,7 +84,7 @@ public class PawnMoveValidator {
 		if ((from.getY() == WHITE_PAWN_INITIAL_Y
 				&& (to.getY() == WHITE_PAWN_INITIAL_Y + 1 || to.getY() == WHITE_PAWN_INITIAL_Y + 2))
 				&& (from.getX() == to.getX())) {
-			if (this.fieldIsOccupied()) {
+			if (destinationFieldIsOccupied()) {
 				return false;
 			} else {
 				return true;
@@ -95,7 +95,7 @@ public class PawnMoveValidator {
 
 	private boolean normalAttackWhitePawnValidation() {
 		if (from.getY() == to.getY() - 1 && from.getX() == to.getX()) {
-			if (this.fieldIsOccupied()) {
+			if (destinationFieldIsOccupied()) {
 				return false;
 			} else {
 				return true;
@@ -108,7 +108,7 @@ public class PawnMoveValidator {
 		if ((from.getY() == BLACK_PAWN_INITIAL_Y
 				&& (to.getY() == BLACK_PAWN_INITIAL_Y - 1 || to.getY() == BLACK_PAWN_INITIAL_Y - 2))
 				&& (from.getX() == to.getX())) {
-			if (this.fieldIsOccupied()) {
+			if (destinationFieldIsOccupied()) {
 				return false;
 			} else {
 				return true;
@@ -119,7 +119,7 @@ public class PawnMoveValidator {
 
 	private boolean normalAttackBlackPawnValidation() {
 		if (from.getY() == to.getY() + 1 && from.getX() == to.getX()) {
-			if (this.fieldIsOccupied()) {
+			if (destinationFieldIsOccupied()) {
 				return false;
 			} else {
 				return true;
@@ -130,7 +130,7 @@ public class PawnMoveValidator {
 
 	private boolean captureBlackPawnValidation() {
 		if (from.getY() == to.getY() + 1 && (Math.abs(from.getX() - to.getX()) == 1)) {
-			if (this.fieldIsOccupiedByEnemyPiece()) {
+			if (destinationFieldIsOccupied()) {
 				return true;
 			} else {
 				return false;
@@ -141,7 +141,7 @@ public class PawnMoveValidator {
 
 	private boolean captureWhitePawnValidation() {
 		if (from.getY() == to.getY() - 1 && (Math.abs(from.getX() - to.getX()) == 1)) {
-			if (this.fieldIsOccupiedByEnemyPiece()) {
+			if (destinationFieldIsOccupied()) {
 				return true;
 			} else {
 				return false;
@@ -150,19 +150,20 @@ public class PawnMoveValidator {
 		return false;
 	}
 
-	private boolean fieldIsOccupied() {
-		if (board.getPieceAt(to) != null) {
+	private boolean destinationFieldIsOccupied() {
+		if (this.getPieceAtToWithNoNullException() != null) {
 			return true;
 		}
 		return false;
+
 	}
 
-	private boolean fieldIsOccupiedByEnemyPiece() {
-		if (this.fieldIsOccupied()) {
-			if (board.getPieceAt(from).getColor()!=(board.getPieceAt(to).getColor()))
-				return true;
+	private Piece getPieceAtToWithNoNullException() {
+		try {
+			return board.getPieceAt(to);
+		} catch (NullPointerException e) {
+			return null;
 		}
-		return false;
 	}
 
 }

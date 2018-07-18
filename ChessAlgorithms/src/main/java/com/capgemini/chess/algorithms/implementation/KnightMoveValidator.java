@@ -2,6 +2,7 @@ package com.capgemini.chess.algorithms.implementation;
 
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.Move;
+import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 
@@ -19,7 +20,7 @@ public class KnightMoveValidator {
 	public Move validate() throws InvalidMoveException {
 		MoveCreator moveCreator = new MoveCreator(from, to, board);
 		if (Math.abs(to.getX() - from.getX()) == 1 && (Math.abs(to.getY() - from.getY()) == 2)) {
-			if (this.fieldIsOccupiedByEnemyPiece()) {
+			if (destinationFieldIsOccupied()) {
 				moveCreator.setCapture();
 				return moveCreator.getMove();
 			} else {
@@ -27,7 +28,7 @@ public class KnightMoveValidator {
 				return moveCreator.getMove();
 			}
 		} else if (Math.abs(to.getX() - from.getX()) == 2 && (Math.abs(to.getY() - from.getY()) == 1)) {
-			if (this.fieldIsOccupiedByEnemyPiece()) {
+			if (destinationFieldIsOccupied()) {
 				moveCreator.setCapture();
 				return moveCreator.getMove();
 			} else {
@@ -38,19 +39,20 @@ public class KnightMoveValidator {
 		throw new InvalidMoveException();
 	}
 
-	private boolean fieldIsOccupied() {
-		if (board.getPieceAt(to) != null) {
+	private boolean destinationFieldIsOccupied() {
+		if (getPieceAtToWithNoNullException() != null) {
 			return true;
 		}
 		return false;
+
 	}
 
-	private boolean fieldIsOccupiedByEnemyPiece() {
-		if (this.fieldIsOccupied()) {
-			if (board.getPieceAt(from).getColor()!=(board.getPieceAt(to).getColor()))
-				return true;
+	private Piece getPieceAtToWithNoNullException() {
+		try {
+			return board.getPieceAt(to);
+		} catch (NullPointerException e) {
+			return null;
 		}
-		return false;
 	}
 
 }
