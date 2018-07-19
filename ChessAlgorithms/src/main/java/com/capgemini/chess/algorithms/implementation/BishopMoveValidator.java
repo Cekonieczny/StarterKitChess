@@ -19,9 +19,11 @@ public class BishopMoveValidator extends MoveValidator {
 	@Override
 	public Move validate() throws InvalidMoveException {
 		MoveCreator moveCreator = new MoveCreator(from, to, board);
-		if (Math.abs(to.getX() - from.getX()) == Math.abs(to.getY() - from.getY())) {
+		boolean isMovingDiagonally = Math.abs(to.getX() - from.getX()) == Math.abs(to.getY() - from.getY());
+		
+		if (isMovingDiagonally) {
 			if (noCollisionOnForwardMove() && noCollisionOnBackwardMove()) {
-				if (destinationFieldIsOccupied(to, board)) {
+				if (thisFieldIsOccupied(to, board)) {
 					moveCreator.setCapture();
 					return moveCreator.getMove();
 				} else {
@@ -34,7 +36,6 @@ public class BishopMoveValidator extends MoveValidator {
 	}
 
 	private boolean noCollisionOnForwardMove() {
-
 		for (int i = from.getX() + 1, j = from.getY() + 1; i < to.getX() && j < to.getY(); i++, j++) {
 			Coordinate coordinate = new Coordinate(i, j);
 			if (board.getPieceAt(coordinate) != null) {

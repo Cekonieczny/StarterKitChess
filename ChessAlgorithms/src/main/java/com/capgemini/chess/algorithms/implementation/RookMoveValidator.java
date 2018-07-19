@@ -19,9 +19,10 @@ public class RookMoveValidator extends MoveValidator {
 	@Override
 	public Move validate() throws InvalidMoveException {
 		MoveCreator moveCreator = new MoveCreator(from, to, board);
+		
 		if (verticalMoveValidation() || horizontalMoveValidation()) {
 			{
-				if (destinationFieldIsOccupied(to, board)) {
+				if (thisFieldIsOccupied(to, board)) {
 					moveCreator.setCapture();
 					return moveCreator.getMove();
 				} else {
@@ -64,7 +65,7 @@ public class RookMoveValidator extends MoveValidator {
 	private boolean noCollisionOnVerticalMoveForward() {
 		for (int j = from.getY() + 1; j < to.getY(); j++) {
 			Coordinate coordinate = new Coordinate(from.getX(), j);
-			if (destinationFieldIsOccupied(coordinate, board)) {
+			if (thisFieldIsOccupied(coordinate, board)) {
 				return false;
 			}
 		}
@@ -74,7 +75,7 @@ public class RookMoveValidator extends MoveValidator {
 	private boolean noCollisionOnVerticalMoveBackward() {
 		for (int j = from.getY() - 1; j > to.getY(); j--) {
 			Coordinate coordinate = new Coordinate(from.getX(), j);
-			if (destinationFieldIsOccupied(coordinate, board)) {
+			if (thisFieldIsOccupied(coordinate, board)) {
 				return false;
 			}
 		}
@@ -84,7 +85,7 @@ public class RookMoveValidator extends MoveValidator {
 	private boolean noCollisionOnHorizontalMoveForward() {
 		for (int i = from.getX() + 1; i < to.getX(); i++) {
 			Coordinate coordinate = new Coordinate(i, from.getY());
-			if (destinationFieldIsOccupied(coordinate, board)) {
+			if (thisFieldIsOccupied(coordinate, board)) {
 				return false;
 			}
 		}
@@ -94,7 +95,7 @@ public class RookMoveValidator extends MoveValidator {
 	private boolean noCollisionOnHorizontalMoveBackward() {
 		for (int i = from.getX() - 1; i > to.getX(); i--) {
 			Coordinate coordinate = new Coordinate(i, from.getY());
-			if (destinationFieldIsOccupied(coordinate, board)) {
+			if (thisFieldIsOccupied(coordinate, board)) {
 				return false;
 			}
 		}

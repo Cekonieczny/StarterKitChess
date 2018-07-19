@@ -186,6 +186,4 @@ public class ValidatorTest {
 		assertEquals(Piece.WHITE_BISHOP, move.getMovedPiece());
 	}
 	
-
-	
 }

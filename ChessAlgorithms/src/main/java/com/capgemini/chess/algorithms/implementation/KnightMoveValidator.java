@@ -2,7 +2,6 @@ package com.capgemini.chess.algorithms.implementation;
 
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.Move;
-import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 
@@ -20,8 +19,9 @@ public class KnightMoveValidator extends MoveValidator {
 	@Override
 	public Move validate() throws InvalidMoveException {
 		MoveCreator moveCreator = new MoveCreator(from, to, board);
+		
 		if (Math.abs(to.getX() - from.getX()) == 1 && (Math.abs(to.getY() - from.getY()) == 2)) {
-			if (destinationFieldIsOccupied(to, board)) {
+			if (thisFieldIsOccupied(to, board)) {
 				moveCreator.setCapture();
 				return moveCreator.getMove();
 			} else {
@@ -29,7 +29,7 @@ public class KnightMoveValidator extends MoveValidator {
 				return moveCreator.getMove();
 			}
 		} else if (Math.abs(to.getX() - from.getX()) == 2 && (Math.abs(to.getY() - from.getY()) == 1)) {
-			if (destinationFieldIsOccupied(to, board)) {
+			if (thisFieldIsOccupied(to, board)) {
 				moveCreator.setCapture();
 				return moveCreator.getMove();
 			} else {

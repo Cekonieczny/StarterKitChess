@@ -241,6 +241,8 @@ public class BoardManager {
 
 		Move move = validateMovePattern(from, to);
 
+		isKingInCheckForCastling(move);
+		
 		Piece movedPiece = move.getMovedPiece();
 		board.setPieceAt(movedPiece, to);
 		board.setPieceAt(null, from);
@@ -415,18 +417,45 @@ public class BoardManager {
 	}
 
 	private boolean thisFieldIsEmpty(Coordinate coordinate) {
-		if (getPieceAtWithNoNullException(coordinate) == null) {
+		if (board.getPieceAt(coordinate) == null) {
 			return true;
 		}
 		return false;
-
 	}
 
-	private Piece getPieceAtWithNoNullException(Coordinate coordinate) {
-		try {
-			return board.getPieceAt(coordinate);
-		} catch (NullPointerException e) {
-			return null;
+	private void isKingInCheckForCastling(Move move) throws KingInCheckException {
+		int initialKingY = move.getTo().getY();
+		int initialKingX = 4;
+		int destinationKingX = move.getTo().getX();
+
+		if (move.getType() == MoveType.CASTLING) {
+			Piece testKing;
+			if (calculateNextMoveColor() == Color.WHITE) {
+				testKing = Piece.WHITE_KING;
+			} else {
+				testKing = Piece.BLACK_KING;
+			}
+
+			if (destinationKingX == 6) {
+				board.setPieceAt(null, new Coordinate(initialKingX, initialKingY));
+				board.setPieceAt(testKing, new Coordinate(initialKingX + 1, initialKingY));
+				if (isKingInCheck(calculateNextMoveColor()) == false) {
+					board.setPieceAt(testKing, new Coordinate(initialKingX, initialKingY));
+					board.setPieceAt(null, new Coordinate(initialKingX + 1, initialKingY));
+				} else {
+					throw new KingInCheckException();
+				}
+			} else if (move.getTo().getX() == 2) {
+				board.setPieceAt(null, new Coordinate(initialKingX, initialKingY));
+				board.setPieceAt(testKing, new Coordinate(initialKingX - 1, initialKingY));
+				if (isKingInCheck(calculateNextMoveColor()) == false) {
+					board.setPieceAt(testKing, new Coordinate(initialKingX, initialKingY));
+					board.setPieceAt(null, new Coordinate(initialKingX - 1, initialKingY));
+				} else {
+					throw new KingInCheckException();
+				}
+			}
+
 		}
 	}
 }
