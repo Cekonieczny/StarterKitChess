@@ -25,7 +25,10 @@ public class PawnMoveValidator extends MoveValidator {
 
 		if ((board.getPieceAt(from) == Piece.WHITE_PAWN && movesForward())
 				|| (board.getPieceAt(from) == Piece.BLACK_PAWN && !movesForward())) {
-			if (normalAttackValidation() || firstAttackValidation()) {
+			if (checkEnPassant()) {
+				moveCreator.setEnPassant();
+				return moveCreator.getMove();
+			} else if (normalAttackValidation() || firstAttackValidation()) {
 				moveCreator.setAttack();
 				return moveCreator.getMove();
 			} else if (capturePawnValidation()) {
@@ -39,7 +42,7 @@ public class PawnMoveValidator extends MoveValidator {
 	private boolean firstAttackValidation() {
 		int verticalMoveDistance = to.getY() - from.getY();
 
-		if (wasPawnPerformingMove() && from.getX() == to.getX() && Math.abs(verticalMoveDistance) == 2) {
+		if (isPawnAtInitialPosition(from) && from.getX() == to.getX() && Math.abs(verticalMoveDistance) == 2) {
 			if (verticalMoveDistance < 0) {
 				if (thisFieldIsOccupied(to, board)
 						|| thisFieldIsOccupied(new Coordinate(to.getX(), to.getY() - 1), board)) {
@@ -85,11 +88,45 @@ public class PawnMoveValidator extends MoveValidator {
 		return false;
 	}
 
-	private boolean wasPawnPerformingMove() {
-		if (board.getPieceAt(from) == Piece.BLACK_PAWN && from.getY() == BLACK_PAWN_INITIAL_Y) {
+	private boolean isPawnAtInitialPosition(Coordinate coordinate) {
+		if (board.getPieceAt(coordinate) == Piece.BLACK_PAWN && coordinate.getY() == BLACK_PAWN_INITIAL_Y) {
 			return true;
-		} else if (board.getPieceAt(from) == Piece.WHITE_PAWN && from.getY() == WHITE_PAWN_INITIAL_Y) {
+		} else if (board.getPieceAt(coordinate) == Piece.WHITE_PAWN && coordinate.getY() == WHITE_PAWN_INITIAL_Y) {
 			return true;
+		}
+		return false;
+	}
+
+	private boolean checkEnPassant() {
+		Move lastMove = null;
+		Piece movedPiece = null;
+
+		if (board.getMoveHistory().size() != 0) {
+			lastMove = board.getMoveHistory().get(board.getMoveHistory().size() - 1);
+		}
+
+		if (lastMove != null) {
+			movedPiece = lastMove.getMovedPiece();
+			if (movedPiece == Piece.BLACK_PAWN && lastMove.getFrom().getY() == BLACK_PAWN_INITIAL_Y
+					|| movedPiece == Piece.WHITE_PAWN && lastMove.getFrom().getY() == WHITE_PAWN_INITIAL_Y) {
+				if (movedPiece.getColor() != board.getPieceAt(from).getColor()
+						&& lastMove.getFrom().getX() == to.getX()) {
+					if (enPassantCapturePawnValidation()) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	private boolean enPassantCapturePawnValidation() {
+		if (Math.abs(from.getY() - to.getY()) == 1 && (Math.abs(from.getX() - to.getX()) == 1)) {
+			if (thisFieldIsOccupied(to, board)) {
+				return false;
+			} else {
+				return true;
+			}
 		}
 		return false;
 	}

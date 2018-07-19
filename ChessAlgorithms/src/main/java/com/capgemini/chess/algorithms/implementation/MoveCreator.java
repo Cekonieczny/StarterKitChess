@@ -26,7 +26,7 @@ public class MoveCreator {
 		move.setType(MoveType.CASTLING);
 	}
 
-	public void setEnPassant(Coordinate from, Coordinate to,Board board){
+	public void setEnPassant(){
 		move.setType(MoveType.EN_PASSANT);
 	}
 	public Move getMove() {

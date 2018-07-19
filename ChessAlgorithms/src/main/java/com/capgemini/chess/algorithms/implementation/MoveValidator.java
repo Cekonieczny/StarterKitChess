@@ -18,16 +18,4 @@ public abstract class MoveValidator{
 		}
 		return false;
 	}
-	
-	public boolean pieceWasNotPerformingMove(Coordinate coordinate,Board board) {
-		List<Move> moveHistory = board.getMoveHistory();
-		for (Move move:moveHistory) {
-			move = moveHistory.iterator().next();
-			if (move.getFrom().equals(coordinate)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 }
