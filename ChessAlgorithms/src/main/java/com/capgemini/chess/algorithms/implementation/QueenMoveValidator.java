@@ -29,7 +29,7 @@ public class QueenMoveValidator extends MoveValidator {
 		throw new InvalidMoveException();
 	}
 
-	private Move rookValidate() {
+	private Move rookValidate() throws InvalidMoveException {
 		RookMoveValidator rookMoveValidator = new RookMoveValidator(from, to, board);
 
 		try {

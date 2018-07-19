@@ -94,4 +94,6 @@ public class KingMoveValidator extends MoveValidator {
 		}
 		return true;
 	}
+	
+	
 }

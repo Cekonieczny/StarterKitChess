@@ -186,4 +186,20 @@ public class ValidatorTest {
 		assertEquals(Piece.WHITE_BISHOP, move.getMovedPiece());
 	}
 	
+	@Test
+	public void testMoveCreatorWithNoSetType() {
+		// given
+		Board board = new Board();
+		Coordinate from = new Coordinate(0,0);
+		Coordinate to = new Coordinate(1,1);
+		MoveCreator moveCreator = new MoveCreator(from,to,board);
+		
+		
+		// when
+		Move move = moveCreator.getMove();
+		
+		// then
+		assertNotNull(move);
+	}
+	
 }

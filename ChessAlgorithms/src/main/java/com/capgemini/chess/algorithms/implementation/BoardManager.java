@@ -339,7 +339,13 @@ public class BoardManager {
 
 		return lastNonAttackMoveIndex;
 	}
-
+/**
+ * 
+ * @param from
+ * @param to
+ * @return
+ * @throws InvalidMoveException
+ */
 	private Move validateMovePattern(Coordinate from, Coordinate to) throws InvalidMoveException {
 		PieceType pieceType = board.getPieceAt(from).getType();
 		MoveValidator moveValidator = null;
@@ -359,7 +365,12 @@ public class BoardManager {
 		}
 		return moveValidator.validate();
 	}
-
+/**
+ * Checks if initial conditions for performing a movement are fulfilled
+ * @param from
+ * @param to
+ * @throws InvalidMoveException
+ */
 	private void initialConditionsAreMet(Coordinate from, Coordinate to) throws InvalidMoveException {
 		if (coordinateIsOutOfBounds(from, to)) {
 			throw new CoordinateOutOfBoundsException();
@@ -378,7 +389,12 @@ public class BoardManager {
 		}
 
 	}
-
+/**
+ * Searches the whole board for any piece of given color
+ * @param givenColor
+ * @param previousPiecePosition
+ * @return
+ */
 	private Coordinate getGivenColorPiecePosition(Color givenColor, Coordinate previousPiecePosition) {
 		int i = previousPiecePosition.getX();
 		int j = previousPiecePosition.getY();
@@ -398,7 +414,11 @@ public class BoardManager {
 		}
 		return null;
 	}
-
+/**
+ * Searches the whole board for current king position of given color
+ * @param kingColor
+ * @return
+ */
 	private Coordinate getCurrentKingPosition(Color kingColor) {
 		int i = 0, j = 0;
 		Coordinate kingPosition = new Coordinate(i, j);
@@ -422,7 +442,13 @@ public class BoardManager {
 		}
 		return false;
 	}
-
+	
+	
+/**
+ * Checks if king is in check in case castling is about to be performed
+ * @param move
+ * @throws KingInCheckException
+ */
 	private void isKingInCheckForCastling(Move move) throws KingInCheckException {
 		int initialKingY = move.getTo().getY();
 		int initialKingX = 4;
@@ -445,7 +471,7 @@ public class BoardManager {
 				} else {
 					throw new KingInCheckException();
 				}
-			} else if (move.getTo().getX() == 2) {
+			} else if (destinationKingX == 2) {
 				board.setPieceAt(null, new Coordinate(initialKingX, initialKingY));
 				board.setPieceAt(testKing, new Coordinate(initialKingX - 1, initialKingY));
 				if (isKingInCheck(calculateNextMoveColor()) == false) {

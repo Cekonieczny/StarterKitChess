@@ -1,7 +1,7 @@
 package com.capgemini.chess.algorithms.implementation.exceptions;
 
 /**
- * Exception which if thrown in case players king will after performing his move 
+ * Exception which is thrown in case players king will after performing his move 
  * 
  * @author Michal Bejm
  *
