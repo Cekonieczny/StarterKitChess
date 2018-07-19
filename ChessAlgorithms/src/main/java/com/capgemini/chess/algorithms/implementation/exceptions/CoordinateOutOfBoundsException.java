@@ -1,6 +1,8 @@
 package com.capgemini.chess.algorithms.implementation.exceptions;
+
 /**
- * Exception which is thrown in case coordinates chosen are bigger or lesser than board's coordinate 
+ * Exception which is thrown in case coordinates chosen are bigger or lesser
+ * than board's coordinate
  * 
  * @author Michal Bejm
  *
@@ -11,10 +13,6 @@ public class CoordinateOutOfBoundsException extends InvalidMoveException {
 
 	public CoordinateOutOfBoundsException() {
 		super("Invalid move! - Coordinate is out of board's bounds");
-	}
-	
-	public CoordinateOutOfBoundsException(String message) {
-		super("Invalid move! - Coordinate is out of board's bounds" + message);
 	}
 
 }

@@ -237,6 +237,8 @@ public class BoardManagerTest {
 		assertEquals(Piece.WHITE_QUEEN, move.getMovedPiece());
 	}
 	
+	
+	
 	@Test
 	public void testPerformMoveRookCapture() throws InvalidMoveException {
 		// given
@@ -868,4 +870,6 @@ public class BoardManagerTest {
 		}
 		return counter;
 	}
+	
+	
 }

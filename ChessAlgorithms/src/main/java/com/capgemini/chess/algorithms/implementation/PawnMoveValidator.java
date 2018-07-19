@@ -45,12 +45,12 @@ public class PawnMoveValidator extends MoveValidator {
 		if (isPawnAtInitialPosition(from) && from.getX() == to.getX() && Math.abs(verticalMoveDistance) == 2) {
 			if (verticalMoveDistance < 0) {
 				if (thisFieldIsOccupied(to, board)
-						|| thisFieldIsOccupied(new Coordinate(to.getX(), to.getY() - 1), board)) {
+						|| thisFieldIsOccupied(new Coordinate(to.getX(), to.getY() + 1), board)) {
 					return false;
 				}
 			} else if (verticalMoveDistance > 0) {
 				if (thisFieldIsOccupied(to, board)
-						|| thisFieldIsOccupied(new Coordinate(to.getX(), to.getY() + 1), board)) {
+						|| thisFieldIsOccupied(new Coordinate(to.getX(), to.getY() - 1), board)) {
 					return false;
 				}
 			}
@@ -122,13 +122,10 @@ public class PawnMoveValidator extends MoveValidator {
 
 	private boolean enPassantCapturePawnValidation() {
 		if (Math.abs(from.getY() - to.getY()) == 1 && (Math.abs(from.getX() - to.getX()) == 1)) {
-			if (thisFieldIsOccupied(to, board)) {
-				return false;
-			} else {
 				return true;
 			}
-		}
 		return false;
-	}
+		}
+
 
 }

@@ -1,4 +1,5 @@
 package com.capgemini.chess.algorithms.implementation.exceptions;
+
 /**
  * Exception which is thrown in case player choses piece of wrong color
  * 
@@ -11,10 +12,6 @@ public class InvalidPieceColorChosenException extends InvalidMoveException {
 
 	public InvalidPieceColorChosenException() {
 		super("Invalid move! - Wrong piece's color chosen");
-	}
-
-	public InvalidPieceColorChosenException(String message) {
-		super("Invalid move! - Wrong piece's color chosen" + message);
 	}
 
 }
