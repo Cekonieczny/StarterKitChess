@@ -363,7 +363,13 @@ public class BoardManager {
 		} else if (pieceType == PieceType.QUEEN) {
 			moveValidator = new QueenMoveValidator(from, to, board);
 		}
-		return moveValidator.validate();
+		
+		if(moveValidator != null){
+			return moveValidator.validate();	
+		}
+		else{
+			throw new InvalidMoveException("No piece type has been given to validate a move pattern");
+		}
 	}
 /**
  * Checks if initial conditions for performing a movement are fulfilled
